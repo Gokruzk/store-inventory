@@ -5,12 +5,12 @@ from bson import json_util, ObjectId
 
 app = Flask(__name__)
 database = 'pymongodb'
-app.config['MONGO_URI'] = f'mongodb://localhost:27017/{database}'
+app.config['MONGO_URI'] = 'mongodb+srv://tidomar:Mongo321@testdb.vqbg6xa.mongodb.net/frutas'
 mongo = PyMongo(app)
 
 
-@app.route('/users', methods=['POST'])
-def create_user():
+@app.route('/products', methods=['POST'])
+def add_product():
     # reciving data from html form
     try:
         username = request.form['username']
@@ -18,9 +18,9 @@ def create_user():
         password = request.form['password']
 
         if username and email and password:
-            #hash password
+            # hash password
             hashed_password = generate_password_hash(password)
-            #insert into mongo collection
+            # insert into mongo collection
             id = mongo.db.users.insert_one(
                 {
                     "username": username,
@@ -42,30 +42,31 @@ def create_user():
     return {' message': ' received'}
 
 
-@app.route('/users', methods=['GET'])
-def get_users():
+@app.route('/products', methods=['GET'])
+def view_products():
     response = ''
     try:
-        users = mongo.db.users.find()
-        response = json_util.dumps(users)
+        products = mongo.db.products.find()
+        response = json_util.dumps(products)
     except:
-        print('An error has occurred while getting users.')
-    return render_template('view_users.html', data=Response(response, mimetype='application/json').get_json())
+        print('An error has occurred while getting products.')
+    return render_template('view_products.html', data=Response(response, mimetype='application/json').get_json())
     # return Response(response, mimetype='application/json')
 
-@app.route('/users/<id>', methods=['GET'])
-def get_user(id):
-    response = ''
-    try:
-        user = mongo.db.users.find_one({'_id': ObjectId(id)})
-        response = json_util.dumps(user)
-    except:
-        print('An error has occurred while getting the user.')
-    return Response(response, mimetype='application/json')
+
+# @app.route('/products/<id>', methods=['GET'])
+# def get_product(id):
+#     response = ''
+#     try:
+#         user = mongo.db.users.find_one({'_id': ObjectId(id)})
+#         response = json_util.dumps(user)
+#     except:
+#         print('An error has occurred while getting the user.')
+#     return Response(response, mimetype='application/json')
 
 
-@app.route('/users/<id>', methods=['DELETE'])
-def delete_user(id):
+@app.route('/products/<id>', methods=['DELETE'])
+def delete_product(id):
     response = ''
     try:
         mongo.db.users.delete_one({'_id': ObjectId(id)})
@@ -80,8 +81,8 @@ def delete_user(id):
     return response
 
 
-@app.route('/users/<id>', methods=['PUT'])
-def update_user(id):
+@app.route('/products/<id>', methods=['PUT'])
+def update_product(id):
     # reciving data
     try:
         username = request.json['username']
@@ -113,7 +114,7 @@ def update_user(id):
 
 
 @app.route('/')
-def hello_world():
+def root():
     return render_template('index.html')
 
 
