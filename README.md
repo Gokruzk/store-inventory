@@ -15,6 +15,8 @@ pip install pymongo
 ```bash
 pip install flask_pymongo
 ```
+Go to mongodb page to download [mongodb community server](https://www.mongodb.com/try/download/community) and [mongosh](https://www.mongodb.com/try/download/atlascli).
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
