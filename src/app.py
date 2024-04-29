@@ -34,10 +34,13 @@ def add_product():
                 }
             )
         else:
+            # show error message
             render_template('messages.html', msg='Fill all the blanks')
     except:
+        # show error message
         render_template('messages.html', msg='Fill all the blanks')
-    return render_template('messages.html', msg='Inserted succesfully')
+    # show success message
+    return render_template('messages.html', msg='Product added successfully')
 
 
 @app.route('/products', methods=['GET'])
@@ -57,9 +60,6 @@ def view_products():
 def get_product():
     input_ = request.form['search']
     option = request.form['category']
-    # product = mongo.db.producto.find({'product': input_})
-    # response = json_util.dumps(product)
-    # print(response)
     response = ""
     try:
         product = mongo.db.producto.find({f'{option}': input_})
@@ -70,20 +70,14 @@ def get_product():
     return render_template('view_product.html', data=Response(response, mimetype='application/json').get_json())
 
 
-@app.route('/products/<id>', methods=['DELETE'])
-def delete_product(id):
-    response = ''
+@app.route('/delete/<string:id_>')
+def delete_product(id_):
     try:
-        mongo.db.users.delete_one({'_id': ObjectId(id)})
-        response = jsonify({
-            "message": "User deleted",
-            "status": 200
-        })
-        response.status_code = 200
+        mongo.db.producto.delete_one({'_id': ObjectId(id_)})
     except:
-        print('An error has occurred while removing the user.')
-        not_found()
-    return response
+        render_template('messages.html',
+                        msg='An error has occurred while deleting the product.')
+    return render_template('messages.html', msg='Product deleted successfully')
 
 
 @app.route('/products/<id>', methods=['PUT'])
@@ -130,6 +124,18 @@ def add_one():
 @app.route('/get_product')
 def get_one():
     return render_template('get_product.html')
+
+
+@app.route('/delete')
+def delete_one():
+    response = ''
+    try:
+        products = mongo.db.producto.find()
+        response = json_util.dumps(products)
+    except:
+        render_template('messages.html',
+                        msg='An error has occurred while getting products.')
+    return render_template('delete_product.html', data=Response(response, mimetype='application/json').get_json())
 
 
 @app.errorhandler(404)
