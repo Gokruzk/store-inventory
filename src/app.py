@@ -43,36 +43,46 @@ def add_product():
 def view_products():
     response = ''
     try:
+        # get products
         products = mongo.db.producto.find()
         response = json_util.dumps(products)
     except:
+        # show error message
         render_template('messages.html',
                         msg='An error has occurred while getting products.')
+    # sends products information to html
     return render_template('view_products.html', data=Response(response, mimetype='application/json').get_json())
     # return Response(response, mimetype='application/json')
 
 
 @app.route('/product', methods=['POST'])
 def get_product():
+    # reciving data from html form
     input_ = request.form['search']
     option = request.form['category']
     response = ""
     try:
+        # get product
         product = mongo.db.producto.find({f'{option}': input_})
         response = json_util.dumps(product)
     except:
+        # show error message
         render_template('messages.html',
                         msg='An error has occurred while getting the product.')
+    # sends products information to html
     return render_template('view_product.html', data=Response(response, mimetype='application/json').get_json())
 
 
 @app.route('/delete/<string:id_>')
 def delete_product(id_):
     try:
+        # delete product
         mongo.db.producto.delete_one({'_id': ObjectId(id_)})
     except:
+        # show error message
         render_template('messages.html',
                         msg='An error has occurred while deleting the product.')
+    # show success message
     return render_template('messages.html', msg='Product deleted successfully')
 
 
@@ -86,7 +96,7 @@ def update_product(id_):
         stock = request.form['stock']
         type_ = request.form['type']
         if product and description and price and stock and type_:
-            # update producto
+            # update product
             mongo.db.producto.update_one(
                 {"_id": ObjectId(id_)},
                 {"$set": {
@@ -107,7 +117,7 @@ def update_product(id_):
     # show success message
     return render_template('messages.html', msg='Product updated successfully')
 
-
+#routes
 @app.route('/')
 def root():
     return render_template('index.html')
@@ -127,11 +137,14 @@ def get_one():
 def delete_one():
     response = ''
     try:
+        # get products
         products = mongo.db.producto.find()
         response = json_util.dumps(products)
     except:
+        # show error message
         render_template('messages.html',
                         msg='An error has occurred while getting products.')
+    # sends products information to html
     return render_template('delete_product.html', data=Response(response, mimetype='application/json').get_json())
 
 
@@ -139,11 +152,14 @@ def delete_one():
 def update_products():
     response = ''
     try:
+        # get products
         products = mongo.db.producto.find()
         response = json_util.dumps(products)
     except:
+        # show error message
         render_template('messages.html',
                         msg='An error has occurred while getting products.')
+    # sends products information to html
     return render_template('update_products.html', data=Response(response, mimetype='application/json').get_json())
 
 
@@ -151,6 +167,7 @@ def update_products():
 def update_form(id_):
     response = ''
     try:
+        # get product information
         products = mongo.db.producto.find_one({'_id': ObjectId(id_)})
         response = json_util.dumps(products)
     except:
