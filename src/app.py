@@ -172,7 +172,7 @@ def update_form(id_):
         response = json_util.dumps(products)
     except:
         render_template('messages.html',
-                        msg='An error has occurred while getting products.')
+                        msg='An error has occurred while getting product.')
     return render_template('update_form.html', data=Response(response, mimetype='application/json').get_json())
 
 
