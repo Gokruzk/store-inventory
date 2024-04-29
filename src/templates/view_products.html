@@ -61,6 +61,13 @@
         button:hover {
             background-color: #45a049;
         }
+                button.back-btn {
+            background-color: #f44336;
+            margin-right: 10px;
+        }
+        button.back-btn:hover {
+            background-color: #d32f2f;
+        }
     </style>
 </head>
 
@@ -92,7 +99,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <a href="{{ url_for('root') }}"><button>Back</button></a>
+        <a href="{{ url_for('root') }}"><button class="back-btn">Back</button></a>
     </div>
 </body>
 
