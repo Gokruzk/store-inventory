@@ -8,6 +8,7 @@ app = Flask(__name__)
 app.config['MONGO_URI'] = f'mongodb+srv://tidomar:Mongo321@testdb.vqbg6xa.mongodb.net/frutas'
 mongo = PyMongo(app)
 
+
 @app.route('/products', methods=['POST'])
 def add_product():
     # reciving data from html form
