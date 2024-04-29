@@ -1,13 +1,12 @@
+import os
 from flask import Flask, request, jsonify, Response, render_template
 from flask_pymongo import PyMongo
-from werkzeug.security import generate_password_hash, check_password_hash
 from bson import json_util, ObjectId
 
+conn = os.environ.get('conn')
 app = Flask(__name__)
-database = 'pymongodb'
-app.config['MONGO_URI'] = 'mongodb+srv://tidomar:Mongo321@testdb.vqbg6xa.mongodb.net/frutas'
+app.config['MONGO_URI'] = f'mongodb+srv://tidomar:Mongo321@testdb.vqbg6xa.mongodb.net/frutas'
 mongo = PyMongo(app)
-
 
 @app.route('/products', methods=['POST'])
 def add_product():
