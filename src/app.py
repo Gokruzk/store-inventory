@@ -12,23 +12,19 @@ mongo = PyMongo(app)
 @app.route('/products', methods=['POST'])
 def add_product():
     # reciving data from html form
+    product = request.form['product']
+    description = request.form['description']
+    price = request.form['price']
+    stock = request.form['stock']
+    type_ = request.form['type']
     try:
-        product = request.form['product']
-        description = request.form['description']
-        price = request.form['price']
-        image = request.form['image']
-        stock = request.form['stock']
-        type_ = request.form['type']
-        query = ''
-        print(product)
-        if product and description and price and image and stock and type_:
+        if product and description and price and stock and type_:
             # insert into mongo collection
-            query = mongo.db.producto.insert_one(
+            mongo.db.producto.insert_one(
                 {
                     "product": product,
                     "description": description,
                     "price": price,
-                    "image": image,
                     "stock": stock,
                     "type": type_
                 }
@@ -80,35 +76,36 @@ def delete_product(id_):
     return render_template('messages.html', msg='Product deleted successfully')
 
 
-@app.route('/products/<id>', methods=['PUT'])
-def update_product(id):
-    # reciving data
+@app.route('/uproducts/<string:id_>', methods=['POST'])
+def update_product(id_):
     try:
-        username = request.json['username']
-        email = request.json['email']
-        password = request.json['password']
-
-        if username and email and password:
-            hashed_password = generate_password_hash(password)
-            mongo.db.users.update_one(
-                {"_id": ObjectId(id)},
+        # reciving data from html form
+        product = request.form['product']
+        description = request.form['description']
+        price = request.form['price']
+        stock = request.form['stock']
+        type_ = request.form['type']
+        if product and description and price and stock and type_:
+            # update producto
+            mongo.db.producto.update_one(
+                {"_id": ObjectId(id_)},
                 {"$set": {
-                    "username": username,
-                    "email": email,
-                    "password": hashed_password
+                    "product": product,
+                    "description": description,
+                    "price": price,
+                    "stock": stock,
+                    "type": type_
                 }
                 }
             )
-            response = jsonify({
-                "message": "User updated",
-                "status": 200
-            })
-            response.status_code = 200
-            return response
+        else:
+            # show error message
+            render_template('messages.html', msg='Fill all the blanks')
     except:
-        print('An error has occurred while creating the user.')
-    else:
-        return not_found()
+        # show error message
+        render_template('messages.html', msg='Fill all the blanks')
+    # show success message
+    return render_template('messages.html', msg='Product updated successfully')
 
 
 @app.route('/')
@@ -136,6 +133,30 @@ def delete_one():
         render_template('messages.html',
                         msg='An error has occurred while getting products.')
     return render_template('delete_product.html', data=Response(response, mimetype='application/json').get_json())
+
+
+@app.route('/update')
+def update_products():
+    response = ''
+    try:
+        products = mongo.db.producto.find()
+        response = json_util.dumps(products)
+    except:
+        render_template('messages.html',
+                        msg='An error has occurred while getting products.')
+    return render_template('update_products.html', data=Response(response, mimetype='application/json').get_json())
+
+
+@app.route('/update_form/<string:id_>')
+def update_form(id_):
+    response = ''
+    try:
+        products = mongo.db.producto.find_one({'_id': ObjectId(id_)})
+        response = json_util.dumps(products)
+    except:
+        render_template('messages.html',
+                        msg='An error has occurred while getting products.')
+    return render_template('update_form.html', data=Response(response, mimetype='application/json').get_json())
 
 
 @app.errorhandler(404)
