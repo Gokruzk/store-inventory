@@ -21,6 +21,7 @@ def add_product():
     price = request.form['price']
     stock = request.form['stock']
     type_ = request.form['type']
+    img_ = request.form['img_url']
     try:
         if product and description and price and stock and type_:
             # insert into mongo collection
@@ -30,7 +31,8 @@ def add_product():
                     "description": description,
                     "price": price,
                     "stock": stock,
-                    "type": type_
+                    "type": type_,
+                    "img_": img_
                 }
             )
         else:
@@ -103,6 +105,7 @@ def update_product(id_):
         price = request.form['price']
         stock = request.form['stock']
         type_ = request.form['type']
+        img_ = request.form['img_url']
         if product and description and price and stock and type_:
             # update product
             mongo.db.producto.update_one(
@@ -112,7 +115,8 @@ def update_product(id_):
                     "description": description,
                     "price": price,
                     "stock": stock,
-                    "type": type_
+                    "type": type_,
+                    "img_": img_
                 }
                 }
             )
