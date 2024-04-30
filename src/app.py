@@ -38,6 +38,7 @@ def add_product():
             render_template('messages.html', msg='Fill all the blanks')
     except Exception as e:
         # show error message
+        print(e)
         render_template('messages.html', msg='Fill all the blanks')
     # show success message
     return render_template('messages.html', msg='Product added successfully')
@@ -52,7 +53,7 @@ def view_products():
         response = json_util.dumps(products)
     except Exception as e:
         # show error message
-        # print(e)
+        print(e)
         render_template('messages.html',
                         msg='An error has occurred while getting products.')
     # sends products information to html
@@ -70,8 +71,9 @@ def get_product():
         # get product
         product = mongo.db.producto.find({f'{option}': input_})
         response = json_util.dumps(product)
-    except:
+    except Exception as e:
         # show error message
+        print(e)
         render_template('messages.html',
                         msg='An error has occurred while getting the product.')
     # sends products information to html
@@ -83,8 +85,9 @@ def delete_product(id_):
     try:
         # delete product
         mongo.db.producto.delete_one({'_id': ObjectId(id_)})
-    except:
+    except Exception as e:
         # show error message
+        print(e)
         render_template('messages.html',
                         msg='An error has occurred while deleting the product.')
     # show success message
@@ -116,8 +119,9 @@ def update_product(id_):
         else:
             # show error message
             render_template('messages.html', msg='Fill all the blanks')
-    except:
+    except Exception as e:
         # show error message
+        print(e)
         render_template('messages.html', msg='Fill all the blanks')
     # show success message
     return render_template('messages.html', msg='Product updated successfully')
@@ -146,8 +150,9 @@ def delete_one():
         # get products
         products = mongo.db.producto.find()
         response = json_util.dumps(products)
-    except:
+    except Exception as e:
         # show error message
+        print(e)
         render_template('messages.html',
                         msg='An error has occurred while getting products.')
     # sends products information to html
@@ -161,8 +166,9 @@ def update_products():
         # get products
         products = mongo.db.producto.find()
         response = json_util.dumps(products)
-    except:
+    except Exception as e:
         # show error message
+        print(e)
         render_template('messages.html',
                         msg='An error has occurred while getting products.')
     # sends products information to html
@@ -176,7 +182,8 @@ def update_form(id_):
         # get product information
         products = mongo.db.producto.find_one({'_id': ObjectId(id_)})
         response = json_util.dumps(products)
-    except:
+    except Exception as e:
+        print(e)
         render_template('messages.html',
                         msg='An error has occurred while getting product.')
     return render_template('update_form.html', data=Response(response, mimetype='application/json').get_json())
