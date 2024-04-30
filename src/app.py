@@ -1,11 +1,15 @@
-import os
 from flask import Flask, request, jsonify, Response, render_template
 from flask_pymongo import PyMongo
 from bson import json_util, ObjectId
 
-conn = os.environ.get('conn')
 app = Flask(__name__)
-app.config['MONGO_URI'] = f'mongodb+srv://tidomar:Mongo321@testdb.vqbg6xa.mongodb.net/frutas'
+# test connection
+try:
+    app.config['MONGO_URI'] = 'mongodb+srv://tidomar:Mongo321@testdb.vqbg6xa.mongodb.net/frutas'
+    print('Connected')
+except Exception as e:
+    print(e)
+
 mongo = PyMongo(app)
 
 
@@ -32,7 +36,7 @@ def add_product():
         else:
             # show error message
             render_template('messages.html', msg='Fill all the blanks')
-    except:
+    except Exception as e:
         # show error message
         render_template('messages.html', msg='Fill all the blanks')
     # show success message
@@ -46,8 +50,9 @@ def view_products():
         # get products
         products = mongo.db.producto.find()
         response = json_util.dumps(products)
-    except:
+    except Exception as e:
         # show error message
+        # print(e)
         render_template('messages.html',
                         msg='An error has occurred while getting products.')
     # sends products information to html
@@ -117,7 +122,8 @@ def update_product(id_):
     # show success message
     return render_template('messages.html', msg='Product updated successfully')
 
-#routes
+
+# routes
 @app.route('/')
 def root():
     return render_template('index.html')
