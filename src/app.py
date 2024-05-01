@@ -5,7 +5,7 @@ from bson import json_util, ObjectId
 app = Flask(__name__)
 # test connection
 try:
-    app.config['MONGO_URI'] = 'mongodb+srv://tidomar:Mongo321@testdb.vqbg6xa.mongodb.net/frutas'
+    app.config['MONGO_URI'] = 'mongodb://localhost:27017/frutas'
     print('Connected')
 except Exception as e:
     print(e)
